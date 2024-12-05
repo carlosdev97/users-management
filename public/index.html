@@ -53,12 +53,6 @@
               }),
             });
 
-            console.log("Datos enviados:", {
-              firstname: data.firstname,
-              lastname: data.lastname,
-              email: data.email,
-            });
-
             if (!response.ok) {
               const errorData = await response.json();
               throw new Error(errorData.message || "Error en la solicitud");
@@ -66,9 +60,10 @@
 
             const result = await response.json();
             console.log("Usuario creado:", result);
+            event.target.reset();
           } catch (error) {
-            console.error("Error:", error); // Imprime el error en la consola para diagnosticar
-            alert("Hubo un problema: " + error.message); // Opcional: notifica al usuario
+            console.error("Error:", error);
+            alert("Hubo un problema: " + error.message);
           }
         });
     </script>
