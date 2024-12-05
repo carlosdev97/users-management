@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="styles/main.css" />
+  </head>
+  <body>
+    <h1>User Management!</h1>
+    <form action="" id="userform">
+      <input
+        type="text"
+        name="firstname"
+        id="firstname"
+        placeholder="Nombre"
+        required
+      />
+      <input
+        type="text"
+        name="lastname"
+        id="lastname"
+        placeholder="Apellidos"
+        required
+      />
+      <input
+        type="email"
+        name="email"
+        id="email"
+        placeholder="Correo electrónico"
+        required
+      />
+      <input type="submit" value="Agregar Usuario" />
+    </form>
+    <script>
+      document
+        .getElementById("userform") // Selección del formulario con el ID.
+        .addEventListener("submit", async (event) => {
+          // Metodo escuchador de eventos ("evento", función a ejecutarse)
+          event.preventDefault();
+          try {
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData.entries());
+            const response = await fetch("/api/users", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                first_name: data.firstname,
+                last_name: data.lastname,
+                email: data.email,
+              }),
+            });
+
+            console.log("Datos enviados:", {
+              firstname: data.firstname,
+              lastname: data.lastname,
+              email: data.email,
+            });
+
+            if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error(errorData.message || "Error en la solicitud");
+            }
+
+            const result = await response.json();
+            console.log("Usuario creado:", result);
+          } catch (error) {
+            console.error("Error:", error); // Imprime el error en la consola para diagnosticar
+            alert("Hubo un problema: " + error.message); // Opcional: notifica al usuario
+          }
+        });
+    </script>
+  </body>
+</html>
